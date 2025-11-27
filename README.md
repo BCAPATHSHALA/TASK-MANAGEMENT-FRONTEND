@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Management UI
 
-## Getting Started
+A modern React-based frontend for task management built with Next.js 14, TypeScript, Zustand, and shadcn/ui.
 
-First, run the development server:
+## Quick Start
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Install dependencies
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Start development server
+pnpm run dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Application runs on http://localhost:3000
+```
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **State Management**: Zustand
+- **UI Components**: shadcn/ui
+- **Styling**: Tailwind CSS v4
+- **Data Fetching**: SWR
+- **Validation**: Zod
+- **Icons**: Lucide React
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+app/
+  ├── layout.tsx              # Root layout
+  ├── page.tsx                # Home page
+  └── globals.css             # Global styles
 
-## Deploy on Vercel
+components/
+  ├── ui/                     # shadcn/ui components
+  │   ├── button.tsx
+  │   ├── input.tsx
+  │   ├── textarea.tsx
+  │   ├── select.tsx
+  │   ├── card.tsx
+  │   ├── badge.tsx
+  │   ├── alert.tsx
+  │   └── alert-dialog.tsx
+  ├── TaskForm.tsx            # Task creation form
+  ├── TaskItem.tsx            # Individual task
+  ├── TaskList.tsx            # Task list container
+  └── Header.tsx              # Header component
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+store/
+  └── taskStore.ts            # Zustand state management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+lib/
+  ├── api.ts                  # API client
+  ├── schemas.ts              # Zod validation
+  └── utils.ts                # Utilities
+
+```
+
+## State Management with Zustand
+
+The application uses Zustand for simple, efficient state management:
+
+### Task Store (`store/taskStore.ts`)
+
+```typescript
+interface TaskState {
+  tasks: Task[];
+  isLoading: boolean;
+  error: string | null;
+  notification: { type: 'success' | 'error' | null; message: string };
+
+  // Actions
+  setTasks(tasks: Task[]): void;
+  addTask(task: Task): void;
+  updateTask(id: string, task: Partial<Task>): void;
+  deleteTask(id: string): void;
+  setNotification(type, message): void;
+}
+```
+
+### Usage in Components
+
+```typescript
+import { useTaskStore } from '@/store/taskStore';
+
+function MyComponent() {
+  const { tasks, addTask, notification } = useTaskStore();
+
+  return <>...</>;
+}
+```
+
+## UI Components (shadcn/ui)
+
+All UI components use shadcn/ui for consistency and accessibility:
+
+- **Button**: Multiple variants with loading states
+- **Input/Textarea**: Form inputs with validation styling
+- **Select**: Accessible dropdown component
+- **Card**: Container with consistent styling
+- **Alert**: Notification component
+- **AlertDialog**: Confirmation dialogs
+- **Badge**: Status displays
+
+## Validation
+
+Zod schemas provide runtime validation:
+
+- **Create Task**: Title required, max 255 characters
+- **Update Task**: Partial updates with optional fields
+- **Status**: PENDING, IN_PROGRESS, or COMPLETED
+
+## Environment Variables
+
+Create `.env.local\` file:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:5000
+```
+
+## Components
+
+### TaskForm
+
+Form component for creating new tasks with validation and error display.
+
+### TaskItem
+
+Component for displaying and editing individual tasks with status updates.
+
+### TaskList
+
+Container component that manages task list state and data fetching with SWR.
+
+### Header
+
+Header component with application title and description.
+
+## Features
+
+- Create, read, update, delete tasks
+- Real-time status updates
+- Form validation with Zod
+- Toast notifications
+- Responsive design with Tailwind CSS
+- Accessible UI with shadcn/ui
+- State management with Zustand
+- Efficient data fetching with SWR
+
+## Build for Production
+
+```bash
+pnpm run build
+pnpm start
+```
