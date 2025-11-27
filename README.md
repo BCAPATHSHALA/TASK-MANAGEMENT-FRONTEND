@@ -120,7 +120,7 @@ Zod schemas provide runtime validation:
 
 ## Environment Variables
 
-Create `.env.local\` file:
+Create `.env.local` file:
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:5000
